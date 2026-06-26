@@ -1,0 +1,19 @@
+.trappie-status-filter {
+    margin: 16px 0;
+}
+
+.trappie-actions {
+    display: grid;
+    gap: 8px;
+}
+
+.trappie-actions form {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.trappie-actions input[type="number"] {
+    width: 130px;
+}

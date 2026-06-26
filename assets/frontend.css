@@ -1,0 +1,126 @@
+.trappie-disclaimer {
+    border-left: 4px solid #2b6cb0;
+    background: #f4f8fc;
+    color: #243447;
+    padding: 12px 14px;
+    margin: 0 0 20px;
+}
+
+.trappie-station-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+.trappie-station-card {
+    border: 1px solid #d9e2ec;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+}
+
+.trappie-station-card h3 {
+    margin: 10px 0 8px;
+}
+
+.trappie-station-image img,
+.trappie-detail-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.trappie-muted {
+    color: #52606d;
+}
+
+.trappie-filter,
+.trappie-suggestion {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 0 0 24px;
+}
+
+.trappie-filter label,
+.trappie-suggestion label {
+    display: grid;
+    gap: 5px;
+}
+
+.trappie-filter select,
+.trappie-suggestion input,
+.trappie-suggestion textarea {
+    width: 100%;
+}
+
+.trappie-filter button,
+.trappie-suggestion button {
+    align-self: end;
+}
+
+.trappie-table-wrap {
+    overflow-x: auto;
+}
+
+.trappie-comparison {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.trappie-comparison th,
+.trappie-comparison td {
+    border: 1px solid #d9e2ec;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.trappie-single {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 18px;
+}
+
+.trappie-detail-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+    gap: 28px;
+    align-items: start;
+}
+
+.trappie-kicker {
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #52606d;
+    font-size: 13px;
+}
+
+.trappie-specs dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.trappie-specs dl div {
+    border: 1px solid #d9e2ec;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.trappie-specs dt {
+    font-weight: 700;
+}
+
+.trappie-notice {
+    background: #edf7ed;
+    border-left: 4px solid #2f855a;
+    padding: 12px 14px;
+}
+
+@media (max-width: 720px) {
+    .trappie-detail-header {
+        grid-template-columns: 1fr;
+    }
+}

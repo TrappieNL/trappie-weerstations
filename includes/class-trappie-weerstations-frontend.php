@@ -14,7 +14,7 @@ final class Trappie_Weerstations_Frontend
         add_shortcode('weerstation_voorstellen', [self::class, 'suggestion_shortcode']);
         add_action('wp_enqueue_scripts', [self::class, 'enqueue_assets']);
         add_action('init', [self::class, 'handle_suggestion_form']);
-        add_filter('template_include', [self::class, 'single_template']);
+        add_filter('template_include', [self::class, 'plugin_template']);
     }
 
     public static function enqueue_assets(): void
@@ -22,10 +22,17 @@ final class Trappie_Weerstations_Frontend
         wp_enqueue_style('trappie-weerstations', TRAPPIE_WEERSTATIONS_URL . 'assets/frontend.css', [], TRAPPIE_WEERSTATIONS_VERSION);
     }
 
-    public static function single_template(string $template): string
+    public static function plugin_template(string $template): string
     {
         if (is_singular(Trappie_Weerstations_Post_Types::STATION_POST_TYPE)) {
             $plugin_template = TRAPPIE_WEERSTATIONS_DIR . 'templates/single-weerstation.php';
+            if (file_exists($plugin_template)) {
+                return $plugin_template;
+            }
+        }
+
+        if (is_post_type_archive(Trappie_Weerstations_Post_Types::STATION_POST_TYPE)) {
+            $plugin_template = TRAPPIE_WEERSTATIONS_DIR . 'templates/archive-weerstation.php';
             if (file_exists($plugin_template)) {
                 return $plugin_template;
             }

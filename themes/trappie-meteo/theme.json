@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 3,
+    "settings": {
+        "appearanceTools": true,
+        "layout": {
+            "contentSize": "760px",
+            "wideSize": "1180px"
+        },
+        "color": {
+            "defaultPalette": false,
+            "palette": [
+                {
+                    "slug": "ink",
+                    "name": "Inkt",
+                    "color": "#17232b"
+                },
+                {
+                    "slug": "sky",
+                    "name": "Luchtblauw",
+                    "color": "#167eae"
+                },
+                {
+                    "slug": "cyan",
+                    "name": "Meetcyan",
+                    "color": "#55bdd1"
+                },
+                {
+                    "slug": "leaf",
+                    "name": "Poldergroen",
+                    "color": "#5f8e44"
+                },
+                {
+                    "slug": "sun",
+                    "name": "Signaalgeel",
+                    "color": "#f0b43c"
+                },
+                {
+                    "slug": "cloud",
+                    "name": "Wolkwit",
+                    "color": "#f5f8f7"
+                }
+            ]
+        },
+        "typography": {
+            "fluid": false,
+            "fontFamilies": [
+                {
+                    "slug": "interface",
+                    "name": "Interface",
+                    "fontFamily": "Inter, Aptos, Segoe UI, sans-serif"
+                }
+            ]
+        }
+    },
+    "styles": {
+        "color": {
+            "background": "#ffffff",
+            "text": "#17232b"
+        },
+        "typography": {
+            "fontFamily": "var:preset|font-family|interface",
+            "lineHeight": "1.65"
+        }
+    }
+}

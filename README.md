@@ -2,6 +2,15 @@
 
 WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations. De plugin is geen webshop en bevat bewust geen winkelwagen, checkout, voorraadbeheer of scraping.
 
+## Repository
+
+Deze repository bevat twee onderdelen:
+
+- De plugin **Trappie Weerstations** staat in de hoofdmap.
+- Het bijbehorende thema **Trappie Meteo** staat in `themes/trappie-meteo`.
+
+Installeer plugin en thema ieder als een afzonderlijke zip in WordPress. Gebruik daarvoor de losse installatiepakketten en niet de volledige GitHub-repositoryzip.
+
 ## Installatie
 
 1. Zip de map `trappie-weerstations`.

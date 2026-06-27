@@ -119,6 +119,40 @@
     align-items: start;
 }
 
+.trappie-detail-content,
+.trappie-photo-gallery,
+.trappie-specs {
+    margin-top: 32px;
+}
+
+.trappie-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.trappie-photo-grid figure {
+    margin: 0;
+}
+
+.trappie-photo-grid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.trappie-photo-grid figcaption {
+    margin-top: 6px;
+    color: #52606d;
+    font-size: 14px;
+}
+
+.trappie-detail-link {
+    font-weight: 700;
+}
+
 .trappie-kicker {
     text-transform: uppercase;
     letter-spacing: .08em;
@@ -150,6 +184,10 @@
 
 @media (max-width: 720px) {
     .trappie-detail-header {
+        grid-template-columns: 1fr;
+    }
+
+    .trappie-photo-grid {
         grid-template-columns: 1fr;
     }
 }

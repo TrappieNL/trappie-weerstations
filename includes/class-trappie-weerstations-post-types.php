@@ -10,6 +10,7 @@ final class Trappie_Weerstations_Post_Types
     public const SOURCE_POST_TYPE = 'crawler_source';
     public const CANDIDATE_POST_TYPE = 'crawler_candidate';
     public const OBSERVATION_POST_TYPE = 'crawler_observation';
+    public const GALLERY_META_KEY = 'weerstation_afbeeldingen';
 
     public const TAXONOMIES = [
         'merk' => 'Merken',
@@ -107,6 +108,8 @@ final class Trappie_Weerstations_Post_Types
             'show_in_rest' => true,
             'publicly_queryable' => false,
             'exclude_from_search' => true,
+            'show_in_menu' => 'edit.php?post_type=' . self::STATION_POST_TYPE,
+            'show_in_admin_bar' => false,
             'menu_icon' => $icon,
             'supports' => ['title', 'editor', 'custom-fields'],
         ]);
@@ -143,6 +146,30 @@ final class Trappie_Weerstations_Post_Types
                 ]);
             }
         }
+
+        register_post_meta(self::STATION_POST_TYPE, self::GALLERY_META_KEY, [
+            'single' => true,
+            'type' => 'array',
+            'show_in_rest' => [
+                'schema' => [
+                    'type' => 'array',
+                    'items' => ['type' => 'integer'],
+                ],
+            ],
+            'sanitize_callback' => [self::class, 'sanitize_gallery_ids'],
+            'auth_callback' => [self::class, 'can_edit_meta'],
+        ]);
+    }
+
+    public static function sanitize_gallery_ids($value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $image_ids = array_values(array_unique(array_filter(array_map('absint', $value))));
+
+        return array_values(array_filter($image_ids, 'wp_attachment_is_image'));
     }
 
     public static function sanitize_meta_value($value): string

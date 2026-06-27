@@ -10,6 +10,7 @@ WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations
 4. Ga naar **Weerstations** om weerstations te beheren.
 5. Gebruik **Weerstations > Gevonden kandidaten** om crawler- of bezoekersvoorstellen te controleren.
 6. Open `/weerstations/` voor het publieke overzicht. De pagina's voor filteren, vergelijken en voorstellen worden automatisch aangemaakt.
+7. Open **Weerstations > Handleiding** voor de gebruikershandleiding in WordPress, of lees `GEBRUIKERSHANDLEIDING.md`.
 
 ## Inhoud
 
@@ -25,6 +26,7 @@ WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations
   - `weerplatformen`
   - `gebruikstype`
 - Featured images voor weerstations.
+- Een aanvullende afbeeldingsgalerij per weerstation via de WordPress-mediabibliotheek.
 - Archive- en single templates voor het overzicht en weerstation detailpagina's.
 - Adminscherm met kandidatenlijst, statussen en acties om een kandidaat om te zetten of te koppelen.
 - Bulkactie om geselecteerde kandidaten in één keer als weerstations aan te maken en te publiceren.

@@ -246,7 +246,8 @@ final class Trappie_Weerstations_Frontend
             if ($price) {
                 printf('<p class="trappie-muted">%s</p>', esc_html($price));
             }
-            echo '<p>' . esc_html(wp_trim_words(get_the_excerpt() ?: get_the_content(), 24)) . '</p>';
+            echo '<p>' . esc_html(wp_trim_words(get_the_excerpt() ?: get_the_content(), 36, '...')) . '</p>';
+            printf('<p><a class="trappie-detail-link" href="%s">Bekijk alle informatie</a></p>', esc_url(get_permalink()));
             echo '</article>';
         }
         echo '</div>';

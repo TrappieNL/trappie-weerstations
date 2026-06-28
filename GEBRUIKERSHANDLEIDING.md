@@ -48,6 +48,9 @@ Gebruik **Uitgelichte afbeelding** voor het belangrijkste beeld. Dit beeld versc
 7. Klik op **Bijwerken**.
 
 Als geen uitgelichte afbeelding is ingesteld, gebruikt de detailpagina de eerste galerijafbeelding als hoofdbeeld.
+Dezelfde afbeelding wordt dan automatisch gebruikt op publieke overzichten en op de startpagina van het thema.
+
+De technische kenmerken staan op de detailpagina in de vaste volgorde van de plugin, als rustige regels onder elkaar.
 
 Gebruik alleen afbeeldingen waarvoor je toestemming of gebruiksrecht hebt. Voeg in de mediabibliotheek een beschrijvende alternatieve tekst toe voor toegankelijkheid.
 

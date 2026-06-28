@@ -15,11 +15,24 @@ final class Trappie_Weerstations_Frontend
         add_action('wp_enqueue_scripts', [self::class, 'enqueue_assets']);
         add_action('init', [self::class, 'handle_suggestion_form']);
         add_filter('template_include', [self::class, 'plugin_template']);
+        add_filter('post_thumbnail_id', [self::class, 'gallery_thumbnail_fallback'], 10, 2);
     }
 
     public static function enqueue_assets(): void
     {
         wp_enqueue_style('trappie-weerstations', TRAPPIE_WEERSTATIONS_URL . 'assets/frontend.css', [], TRAPPIE_WEERSTATIONS_VERSION);
+    }
+
+    public static function gallery_thumbnail_fallback($thumbnail_id, $post): int
+    {
+        if ($thumbnail_id || !($post instanceof WP_Post) || $post->post_type !== Trappie_Weerstations_Post_Types::STATION_POST_TYPE) {
+            return absint($thumbnail_id);
+        }
+
+        $gallery_ids = get_post_meta($post->ID, Trappie_Weerstations_Post_Types::GALLERY_META_KEY, true);
+        $gallery_ids = Trappie_Weerstations_Post_Types::sanitize_gallery_ids($gallery_ids);
+
+        return $gallery_ids[0] ?? 0;
     }
 
     public static function plugin_template(string $template): string

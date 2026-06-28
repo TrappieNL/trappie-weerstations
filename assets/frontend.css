@@ -160,20 +160,30 @@
     font-size: 13px;
 }
 
-.trappie-specs dl {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px;
+.trappie-single .trappie-specs dl {
+    display: block !important;
+    margin: 0;
+    border-top: 1px solid #d9e2ec;
 }
 
-.trappie-specs dl div {
-    border: 1px solid #d9e2ec;
-    border-radius: 8px;
-    padding: 12px;
+.trappie-single .trappie-specs dl div {
+    display: grid;
+    grid-template-columns: minmax(180px, 32%) minmax(0, 1fr);
+    gap: 18px;
+    margin: 0;
+    border: 0 !important;
+    border-bottom: 1px solid #d9e2ec !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 12px 0 !important;
 }
 
 .trappie-specs dt {
     font-weight: 700;
+}
+
+.trappie-specs dd {
+    margin: 0;
 }
 
 .trappie-notice {
@@ -189,5 +199,10 @@
 
     .trappie-photo-grid {
         grid-template-columns: 1fr;
+    }
+
+    .trappie-single .trappie-specs dl div {
+        grid-template-columns: 1fr;
+        gap: 3px;
     }
 }

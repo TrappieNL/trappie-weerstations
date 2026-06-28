@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Trappie Weerstations
  * Description: Informatieve hobby- en advieswebsite over weerstations. Geen webshop.
- * Version: 1.3.1
+ * Version: 1.4.0
  * Author: Trappie
  * Text Domain: trappie-weerstations
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TRAPPIE_WEERSTATIONS_VERSION', '1.3.1');
+define('TRAPPIE_WEERSTATIONS_VERSION', '1.4.0');
 define('TRAPPIE_WEERSTATIONS_FILE', __FILE__);
 define('TRAPPIE_WEERSTATIONS_DIR', plugin_dir_path(__FILE__));
 define('TRAPPIE_WEERSTATIONS_URL', plugin_dir_url(__FILE__));

@@ -30,6 +30,7 @@ WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations
 - Archive- en single templates voor het overzicht en weerstation detailpagina's.
 - Adminscherm met kandidatenlijst, statussen en acties om een kandidaat om te zetten of te koppelen.
 - Bulkactie om geselecteerde kandidaten in één keer als weerstations aan te maken en te publiceren.
+- Bulkacties om kandidaatstatussen te wijzigen of kandidaten naar de prullenbak dan wel permanent te verwijderen.
 
 ## Shortcodes
 

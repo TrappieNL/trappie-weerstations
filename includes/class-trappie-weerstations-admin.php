@@ -10,7 +10,7 @@ final class Trappie_Weerstations_Admin
     {
         add_action('admin_menu', [self::class, 'admin_menu']);
         add_action('admin_post_trappie_create_station', [self::class, 'create_station_from_candidate']);
-        add_action('admin_post_trappie_bulk_candidates', [self::class, 'bulk_create_and_publish']);
+        add_action('admin_post_trappie_bulk_candidates', [self::class, 'handle_bulk_candidates']);
         add_action('admin_post_trappie_link_station', [self::class, 'link_candidate_to_station']);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_assets']);
         add_action('add_meta_boxes_' . Trappie_Weerstations_Post_Types::STATION_POST_TYPE, [self::class, 'add_gallery_meta_box']);
@@ -70,6 +70,7 @@ final class Trappie_Weerstations_Admin
             'mediaTitle' => 'Kies afbeeldingen voor dit weerstation',
             'mediaButton' => 'Afbeeldingen gebruiken',
             'removeImage' => 'Afbeelding verwijderen',
+            'confirmPermanentDelete' => 'Weet je zeker dat je de geselecteerde kandidaten permanent wilt verwijderen? Dit kan niet ongedaan worden gemaakt.',
         ]);
 
         if ($is_station_editor) {
@@ -180,21 +181,13 @@ final class Trappie_Weerstations_Admin
             $merk = get_post_meta($candidate_id, 'merk', true);
             $model = get_post_meta($candidate_id, 'model', true);
             $source = get_post_meta($candidate_id, 'bron_url', true) ?: get_post_meta($candidate_id, 'source_url', true);
-            $linked_station_id = absint(get_post_meta($candidate_id, 'linked_station_id', true));
-            $linked_station = $linked_station_id ? get_post($linked_station_id) : null;
-            $station_is_published = $linked_station &&
-                $linked_station->post_type === Trappie_Weerstations_Post_Types::STATION_POST_TYPE &&
-                $linked_station->post_status === 'publish';
-
             echo '<tr>';
             echo '<th scope="row" class="check-column">';
-            if (!$station_is_published) {
-                printf(
-                    '<input form="trappie-bulk-form" class="trappie-candidate-checkbox" type="checkbox" name="candidate_ids[]" value="%d"><span class="screen-reader-text">%s selecteren</span>',
-                    $candidate_id,
-                    esc_html(get_the_title())
-                );
-            }
+            printf(
+                '<input form="trappie-bulk-form" class="trappie-candidate-checkbox" type="checkbox" name="candidate_ids[]" value="%d"><span class="screen-reader-text">%s selecteren</span>',
+                $candidate_id,
+                esc_html(get_the_title())
+            );
             echo '</th>';
             printf('<td><a href="%s">%s</a></td>', esc_url(get_edit_post_link($candidate_id)), esc_html(get_the_title()));
             printf('<td>%s</td>', esc_html(self::candidate_statuses()[$status] ?? $status));
@@ -218,6 +211,15 @@ final class Trappie_Weerstations_Admin
         echo '<select name="bulk_action" required>';
         echo '<option value="">Bulkacties</option>';
         echo '<option value="create_publish">Maak en publiceer weerstations</option>';
+        echo '<option value="set_status">Status veranderen</option>';
+        echo '<option value="trash">Naar prullenbak</option>';
+        echo '<option value="delete_permanently">Permanent verwijderen</option>';
+        echo '</select>';
+        echo '<select name="target_status" data-bulk-status hidden>';
+        echo '<option value="">Kies nieuwe status</option>';
+        foreach (self::candidate_statuses() as $key => $label) {
+            printf('<option value="%s">%s</option>', esc_attr($key), esc_html($label));
+        }
         echo '</select>';
         echo '<button type="submit" class="button action">Toepassen</button>';
         echo '</form>';
@@ -229,15 +231,28 @@ final class Trappie_Weerstations_Admin
             return;
         }
 
-        $published = isset($_GET['published']) ? absint($_GET['published']) : 0;
+        $operation = isset($_GET['bulk_operation']) ? sanitize_key(wp_unslash($_GET['bulk_operation'])) : '';
+        $processed = isset($_GET['processed']) ? absint($_GET['processed']) : 0;
         $skipped = isset($_GET['skipped']) ? absint($_GET['skipped']) : 0;
         $failed = isset($_GET['failed']) ? absint($_GET['failed']) : 0;
         $class = $failed > 0 ? 'notice notice-warning is-dismissible' : 'notice notice-success is-dismissible';
 
+        if ($operation === 'set_status') {
+            $target_status = isset($_GET['target_status']) ? sanitize_key(wp_unslash($_GET['target_status'])) : '';
+            $status_label = self::candidate_statuses()[$target_status] ?? $target_status;
+            $message = sprintf('%d kandidaat/kandidaten gewijzigd naar status %s, %d overgeslagen en %d mislukt.', $processed, $status_label, $skipped, $failed);
+        } elseif ($operation === 'trash') {
+            $message = sprintf('%d kandidaat/kandidaten naar de prullenbak verplaatst en %d mislukt.', $processed, $failed);
+        } elseif ($operation === 'delete_permanently') {
+            $message = sprintf('%d kandidaat/kandidaten permanent verwijderd en %d mislukt.', $processed, $failed);
+        } else {
+            $message = sprintf('%d weerstation(s) gepubliceerd, %d overgeslagen en %d mislukt.', $processed, $skipped, $failed);
+        }
+
         printf(
             '<div class="%s"><p>%s</p></div>',
             esc_attr($class),
-            esc_html(sprintf('%d weerstation(s) gepubliceerd, %d overgeslagen en %d mislukt.', $published, $skipped, $failed))
+            esc_html($message)
         );
     }
 
@@ -301,34 +316,75 @@ final class Trappie_Weerstations_Admin
         exit;
     }
 
-    public static function bulk_create_and_publish(): void
+    public static function handle_bulk_candidates(): void
     {
-        if (!current_user_can('publish_posts')) {
-            wp_die(esc_html__('Onvoldoende rechten om weerstations te publiceren.', 'trappie-weerstations'));
+        if (!current_user_can('edit_posts')) {
+            wp_die(esc_html__('Onvoldoende rechten.', 'trappie-weerstations'));
         }
 
         check_admin_referer('trappie_bulk_candidates', 'trappie_bulk_nonce');
 
         $bulk_action = isset($_POST['bulk_action']) ? sanitize_key(wp_unslash($_POST['bulk_action'])) : '';
+        $target_status = isset($_POST['target_status']) ? sanitize_key(wp_unslash($_POST['target_status'])) : '';
         $raw_ids = isset($_POST['candidate_ids']) && is_array($_POST['candidate_ids']) ? wp_unslash($_POST['candidate_ids']) : [];
         $candidate_ids = array_values(array_unique(array_filter(array_map('absint', $raw_ids))));
+        $allowed_actions = ['create_publish', 'set_status', 'trash', 'delete_permanently'];
 
-        if ($bulk_action !== 'create_publish' || !$candidate_ids) {
-            wp_die(esc_html__('Selecteer minimaal één kandidaat en een geldige bulkactie.', 'trappie-weerstations'));
+        if (!in_array($bulk_action, $allowed_actions, true) || !$candidate_ids) {
+            wp_die(esc_html__('Selecteer minimaal een kandidaat en een geldige bulkactie.', 'trappie-weerstations'));
         }
 
-        $published = 0;
+        if ($bulk_action === 'set_status' && !isset(self::candidate_statuses()[$target_status])) {
+            wp_die(esc_html__('Kies een geldige nieuwe status.', 'trappie-weerstations'));
+        }
+
+        if ($bulk_action === 'create_publish' && !current_user_can('publish_posts')) {
+            wp_die(esc_html__('Onvoldoende rechten om weerstations te publiceren.', 'trappie-weerstations'));
+        }
+
+        $processed = 0;
         $skipped = 0;
         $failed = 0;
 
         foreach ($candidate_ids as $candidate_id) {
             $candidate = get_post($candidate_id);
-            if (
-                !$candidate ||
-                $candidate->post_type !== Trappie_Weerstations_Post_Types::CANDIDATE_POST_TYPE ||
-                !current_user_can('edit_post', $candidate_id)
-            ) {
+            if (!$candidate || $candidate->post_type !== Trappie_Weerstations_Post_Types::CANDIDATE_POST_TYPE) {
                 $failed++;
+                continue;
+            }
+
+            if (in_array($bulk_action, ['trash', 'delete_permanently'], true)) {
+                if (!current_user_can('delete_post', $candidate_id)) {
+                    $failed++;
+                    continue;
+                }
+
+                $result = $bulk_action === 'trash'
+                    ? wp_trash_post($candidate_id)
+                    : wp_delete_post($candidate_id, true);
+
+                if (!$result) {
+                    $failed++;
+                } else {
+                    $processed++;
+                }
+                continue;
+            }
+
+            if (!current_user_can('edit_post', $candidate_id)) {
+                $failed++;
+                continue;
+            }
+
+            if ($bulk_action === 'set_status') {
+                $current_status = get_post_meta($candidate_id, 'candidate_status', true) ?: 'nieuw';
+                if ($current_status === $target_status) {
+                    $skipped++;
+                    continue;
+                }
+
+                update_post_meta($candidate_id, 'candidate_status', $target_status);
+                $processed++;
                 continue;
             }
 
@@ -362,7 +418,7 @@ final class Trappie_Weerstations_Admin
                 }
 
                 update_post_meta($candidate_id, 'candidate_status', 'gepubliceerd');
-                $published++;
+                $processed++;
                 continue;
             }
 
@@ -381,14 +437,16 @@ final class Trappie_Weerstations_Admin
             self::copy_station_meta($candidate_id, (int) $station_id);
             update_post_meta($candidate_id, 'candidate_status', 'gepubliceerd');
             update_post_meta($candidate_id, 'linked_station_id', (string) $station_id);
-            $published++;
+            $processed++;
         }
 
         $redirect = add_query_arg([
             'post_type' => Trappie_Weerstations_Post_Types::STATION_POST_TYPE,
             'page' => 'trappie-kandidaten',
             'trappie_bulk_done' => '1',
-            'published' => $published,
+            'bulk_operation' => $bulk_action,
+            'target_status' => $target_status,
+            'processed' => $processed,
             'skipped' => $skipped,
             'failed' => $failed,
         ], admin_url('edit.php'));

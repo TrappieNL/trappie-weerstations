@@ -85,6 +85,14 @@ Kandidaatstatussen:
 
 Een reeds gepubliceerd gekoppeld weerstation wordt niet dubbel aangemaakt. Een gekoppeld concept kan met dezelfde bulkactie worden gepubliceerd.
 
+De bulkkeuzelijst bevat daarnaast:
+
+- **Status veranderen**: kies daarna de gewenste kandidaatstatus en klik op **Toepassen**.
+- **Naar prullenbak**: verwijdert kandidaten herstelbaar uit de actieve lijst. Herstellen kan via **Weerstations > Crawler kandidaten > Prullenbak**.
+- **Permanent verwijderen**: verwijdert de geselecteerde kandidaten definitief na een extra bevestiging.
+
+Het verwijderen van een kandidaat verwijdert nooit het gekoppelde weerstation. Permanent verwijderen kan niet ongedaan worden gemaakt.
+
 ## 7. Prijzen controleren
 
 De plugin bevat geen vaste of standaardprijs. De waarde in **Indicatieve prijsklasse** komt uit de opgeslagen kandidaat- of crawlinformatie, of is handmatig ingevoerd.

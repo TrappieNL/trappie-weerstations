@@ -27,6 +27,39 @@
         });
     }
 
+    function initializeBulkActions() {
+        var form = document.getElementById('trappie-bulk-form');
+
+        if (!form) {
+            return;
+        }
+
+        var actionSelect = form.querySelector('[name="bulk_action"]');
+        var statusSelect = form.querySelector('[data-bulk-status]');
+
+        function updateStatusVisibility() {
+            var showStatus = actionSelect.value === 'set_status';
+            statusSelect.hidden = !showStatus;
+            statusSelect.required = showStatus;
+
+            if (!showStatus) {
+                statusSelect.value = '';
+            }
+        }
+
+        actionSelect.addEventListener('change', updateStatusVisibility);
+        form.addEventListener('submit', function (event) {
+            if (
+                actionSelect.value === 'delete_permanently' &&
+                !window.confirm(window.trappieAdmin.confirmPermanentDelete)
+            ) {
+                event.preventDefault();
+            }
+        });
+
+        updateStatusVisibility();
+    }
+
     function initializeGallery() {
         var field = document.querySelector('[data-gallery-field]');
 
@@ -103,5 +136,6 @@
     }
 
     initializeBulkSelection();
+    initializeBulkActions();
     initializeGallery();
 }());

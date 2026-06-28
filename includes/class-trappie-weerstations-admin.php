@@ -300,7 +300,7 @@ final class Trappie_Weerstations_Admin
         $station_id = wp_insert_post([
             'post_type' => Trappie_Weerstations_Post_Types::STATION_POST_TYPE,
             'post_status' => 'draft',
-            'post_title' => $candidate->post_title,
+            'post_title' => self::station_title_from_candidate($candidate_id, $candidate->post_title),
             'post_content' => $candidate->post_content,
         ], true);
 
@@ -425,7 +425,7 @@ final class Trappie_Weerstations_Admin
             $station_id = wp_insert_post([
                 'post_type' => Trappie_Weerstations_Post_Types::STATION_POST_TYPE,
                 'post_status' => 'publish',
-                'post_title' => $candidate->post_title,
+                'post_title' => self::station_title_from_candidate($candidate_id, $candidate->post_title),
                 'post_content' => $candidate->post_content,
             ], true);
 
@@ -497,6 +497,49 @@ final class Trappie_Weerstations_Admin
             }
             update_post_meta($station_id, $key, $value);
         }
+
+        self::copy_candidate_images($candidate_id, $station_id, $overwrite);
+    }
+
+    private static function station_title_from_candidate(int $candidate_id, string $fallback): string
+    {
+        $merk = trim((string) get_post_meta($candidate_id, 'merk', true));
+        $model = trim((string) get_post_meta($candidate_id, 'model', true));
+        $title = trim($merk . ' ' . $model);
+
+        return $title !== '' ? $title : $fallback;
+    }
+
+    private static function copy_candidate_images(int $candidate_id, int $station_id, bool $overwrite): void
+    {
+        $image_ids = [];
+        $thumbnail_id = get_post_thumbnail_id($candidate_id);
+        if ($thumbnail_id) {
+            $image_ids[] = (int) $thumbnail_id;
+        }
+
+        $attachments = get_posts([
+            'post_type' => 'attachment',
+            'post_status' => 'inherit',
+            'post_parent' => $candidate_id,
+            'post_mime_type' => 'image',
+            'posts_per_page' => -1,
+            'orderby' => 'menu_order ID',
+            'order' => 'ASC',
+            'fields' => 'ids',
+        ]);
+        $image_ids = array_values(array_unique(array_merge($image_ids, array_map('absint', $attachments))));
+        if (!$image_ids) {
+            return;
+        }
+
+        $gallery_key = Trappie_Weerstations_Post_Types::GALLERY_META_KEY;
+        if ($overwrite || !get_post_meta($station_id, $gallery_key, true)) {
+            update_post_meta($station_id, $gallery_key, $image_ids);
+        }
+        if ($overwrite || !has_post_thumbnail($station_id)) {
+            set_post_thumbnail($station_id, $image_ids[0]);
+        }
     }
 
     public static function render_manual_page(): void
@@ -524,6 +567,7 @@ final class Trappie_Weerstations_Admin
                     <li>Kies een bestaand weerstation of klik op <strong>Nieuw weerstation</strong>.</li>
                     <li>Vul titel, volledige beschrijving en de technische velden in.</li>
                     <li>Gebruik <strong>Uitgelichte afbeelding</strong> voor het belangrijkste productbeeld.</li>
+                    <li>Vink <strong>Uitgelicht weerstation</strong> aan voor opname in de selectie op de website.</li>
                     <li>Klik op <strong>Publiceren</strong> of <strong>Bijwerken</strong>.</li>
                 </ol>
             </section>
@@ -557,9 +601,10 @@ final class Trappie_Weerstations_Admin
                     <thead><tr><th>Functie</th><th>Shortcode</th></tr></thead>
                     <tbody>
                         <tr><td>Overzicht</td><td><code>[weerstations_overzicht]</code></td></tr>
+                        <tr><td>Uitgelicht</td><td><code>[weerstations_uitgelicht aantal="4"]</code></td></tr>
                         <tr><td>Filter</td><td><code>[weerstations_filter]</code></td></tr>
                         <tr><td>Vergelijking</td><td><code>[weerstations_vergelijking]</code></td></tr>
-                        <tr><td>Voorstelformulier</td><td><code>[weerstation_voorstellen]</code></td></tr>
+                        <tr><td>Contactformulier</td><td><code>[trappie_contactformulier]</code></td></tr>
                     </tbody>
                 </table>
             </section>

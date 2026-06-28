@@ -1,7 +1,19 @@
+.trappie-archive,
+.trappie-single,
+.trappie-contact-form {
+    --trappie-ink: #17232b;
+    --trappie-sky: #167eae;
+    --trappie-cyan: #55bdd1;
+    --trappie-leaf: #5f8e44;
+    --trappie-sun: #f0b43c;
+    --trappie-cloud: #f5f8f7;
+    --trappie-line: #d8e1df;
+}
+
 .trappie-disclaimer {
-    border-left: 4px solid #2b6cb0;
-    background: #f4f8fc;
-    color: #243447;
+    border-left: 4px solid var(--trappie-sun, #f0b43c);
+    background: #fff8e8;
+    color: var(--trappie-ink, #17232b);
     padding: 12px 14px;
     margin: 0 0 20px;
 }
@@ -9,18 +21,38 @@
 .trappie-station-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 18px;
+    gap: 22px;
 }
 
 .trappie-station-card {
-    border: 1px solid #d9e2ec;
-    border-radius: 8px;
-    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--trappie-line, #d8e1df);
+    border-radius: 6px;
+    padding: 0 !important;
     background: #fff;
+    box-shadow: 0 12px 30px rgba(23, 35, 43, .08);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.trappie-station-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(23, 35, 43, .14);
+}
+
+.trappie-card-content {
+    padding: 18px;
 }
 
 .trappie-station-card h3 {
-    margin: 10px 0 8px;
+    margin: 4px 0 8px;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.trappie-station-card h3 a {
+    color: var(--trappie-ink, #17232b);
+    text-decoration: none;
 }
 
 .trappie-station-image img,
@@ -28,36 +60,93 @@
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 8px;
+    border-radius: 6px;
+}
+
+.trappie-station-image {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #dfe8e6;
+}
+
+.trappie-station-image img {
+    aspect-ratio: 16 / 10;
+    border-radius: 0;
+    object-fit: cover;
+    transition: transform .25s ease;
+}
+
+.trappie-station-card:hover .trappie-station-image img {
+    transform: scale(1.03);
+}
+
+.trappie-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    border-radius: 4px;
+    background: var(--trappie-sun, #f0b43c);
+    color: #17232b;
+    padding: 5px 8px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.trappie-card-brand {
+    margin: 0;
+    color: var(--trappie-leaf, #5f8e44);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .trappie-muted {
     color: #52606d;
 }
 
-.trappie-filter,
-.trappie-suggestion {
+.trappie-filter {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 14px;
-    margin: 0 0 24px;
+    margin: 0 0 30px;
+    border-top: 1px solid var(--trappie-line, #d8e1df);
+    border-bottom: 1px solid var(--trappie-line, #d8e1df);
+    background: var(--trappie-cloud, #f5f8f7);
+    padding: 18px;
 }
 
 .trappie-filter label,
-.trappie-suggestion label {
+.trappie-contact-form label {
     display: grid;
     gap: 5px;
+    font-weight: 700;
 }
 
 .trappie-filter select,
-.trappie-suggestion input,
-.trappie-suggestion textarea {
+.trappie-contact-form input,
+.trappie-contact-form textarea {
     width: 100%;
+    min-height: 44px;
+    border: 1px solid #aebdba;
+    border-radius: 4px;
+    background: #fff;
+    padding: 8px 10px;
 }
 
-.trappie-filter button,
-.trappie-suggestion button {
+.trappie-filter button {
     align-self: end;
+}
+
+.trappie-filter-actions {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+}
+
+.trappie-filter-actions a {
+    padding: 9px 0;
+    font-weight: 700;
 }
 
 .trappie-table-wrap {
@@ -77,6 +166,29 @@
     vertical-align: top;
 }
 
+.trappie-comparison thead th {
+    min-width: 190px;
+    background: var(--trappie-cloud, #f5f8f7);
+}
+
+.trappie-comparison thead th:first-child {
+    min-width: 140px;
+}
+
+.trappie-comparison-station {
+    display: grid;
+    gap: 8px;
+    color: var(--trappie-ink, #17232b);
+    text-decoration: none;
+}
+
+.trappie-comparison-station img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
 .trappie-single {
     max-width: 1120px;
     margin: 0 auto;
@@ -86,15 +198,27 @@
 .trappie-archive {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 32px 18px 56px;
+    padding: 48px 18px 72px;
 }
 
 .trappie-archive-header {
-    margin-bottom: 28px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--trappie-line, #d8e1df);
+    padding: 22px 0 34px;
 }
 
 .trappie-archive-header h1 {
-    margin-bottom: 8px;
+    max-width: 760px;
+    margin: 0 0 10px;
+    color: var(--trappie-ink, #17232b);
+    font-size: 52px;
+    line-height: 1.05;
+}
+
+.trappie-archive-header > p:not(.trappie-kicker) {
+    max-width: 720px;
+    color: #52606d;
+    font-size: 19px;
 }
 
 .trappie-archive-actions {
@@ -110,6 +234,107 @@
     border-radius: 6px;
     padding: 8px 12px;
     text-decoration: none;
+    font-weight: 700;
+}
+
+.trappie-featured-stations {
+    margin-bottom: 64px;
+    padding-bottom: 58px;
+    border-bottom: 1px solid var(--trappie-line, #d8e1df);
+}
+
+.trappie-section-heading,
+.trappie-results-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.trappie-section-heading h2,
+.trappie-results-heading h2 {
+    margin: 0;
+    color: var(--trappie-ink, #17232b);
+    font-size: 34px;
+    line-height: 1.15;
+}
+
+.trappie-section-heading > a {
+    flex: 0 0 auto;
+    font-weight: 800;
+}
+
+.trappie-results-heading > p {
+    margin: 0;
+    color: #52606d;
+    font-weight: 700;
+}
+
+.trappie-all-stations {
+    scroll-margin-top: 30px;
+}
+
+.trappie-compare-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px -18px -18px;
+    border-top: 1px solid var(--trappie-line, #d8e1df);
+    background: var(--trappie-cloud, #f5f8f7);
+    padding: 12px 18px;
+    color: var(--trappie-ink, #17232b);
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.trappie-compare-option input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.trappie-compare-bar {
+    position: fixed;
+    z-index: 15;
+    left: 50%;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    width: min(760px, calc(100% - 32px));
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 6px;
+    background: #17232b;
+    box-shadow: 0 16px 38px rgba(23, 35, 43, .25);
+    color: #fff;
+    padding: 12px 14px 12px 18px;
+    transform: translateX(-50%);
+}
+
+.trappie-compare-bar[hidden] {
+    display: none;
+}
+
+.trappie-compare-bar p {
+    margin: 0;
+}
+
+.trappie-compare-button {
+    border-radius: 4px;
+    background: var(--trappie-sun, #f0b43c);
+    color: #17232b;
+    padding: 9px 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.trappie-compare-button.is-disabled {
+    cursor: not-allowed;
+    opacity: .52;
 }
 
 .trappie-detail-header {
@@ -192,12 +417,66 @@
     padding: 12px 14px;
 }
 
+.trappie-notice-error {
+    border-left-color: #b42318;
+    background: #fff1f0;
+}
+
+.trappie-contact-form {
+    display: grid;
+    gap: 16px;
+    max-width: 760px;
+    margin-top: 26px;
+    border-top: 4px solid var(--trappie-cyan, #55bdd1);
+    background: var(--trappie-cloud, #f5f8f7);
+    padding: 26px;
+}
+
+.trappie-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.trappie-contact-form button {
+    justify-self: start;
+}
+
+.trappie-honeypot {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.trappie-contact-cta {
+    border-left: 5px solid var(--trappie-cyan, #55bdd1);
+    background: var(--trappie-cloud, #f5f8f7);
+    padding: 22px;
+}
+
 @media (max-width: 720px) {
     .trappie-detail-header {
         grid-template-columns: 1fr;
     }
 
     .trappie-photo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trappie-archive-header h1 {
+        font-size: 38px;
+    }
+
+    .trappie-section-heading,
+    .trappie-results-heading,
+    .trappie-compare-bar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .trappie-contact-grid {
         grid-template-columns: 1fr;
     }
 

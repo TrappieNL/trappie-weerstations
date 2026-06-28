@@ -11,6 +11,7 @@ final class Trappie_Weerstations_Post_Types
     public const CANDIDATE_POST_TYPE = 'crawler_candidate';
     public const OBSERVATION_POST_TYPE = 'crawler_observation';
     public const GALLERY_META_KEY = 'weerstation_afbeeldingen';
+    public const FEATURED_META_KEY = 'weerstation_uitgelicht';
 
     public const TAXONOMIES = [
         'merk' => 'Merken',
@@ -96,6 +97,11 @@ final class Trappie_Weerstations_Post_Types
 
     private static function register_internal_post_type(string $post_type, string $plural, string $singular, string $icon): void
     {
+        $supports = ['title', 'editor', 'custom-fields'];
+        if ($post_type === self::CANDIDATE_POST_TYPE) {
+            $supports[] = 'thumbnail';
+        }
+
         register_post_type($post_type, [
             'labels' => [
                 'name' => $plural,
@@ -111,7 +117,7 @@ final class Trappie_Weerstations_Post_Types
             'show_in_menu' => 'edit.php?post_type=' . self::STATION_POST_TYPE,
             'show_in_admin_bar' => false,
             'menu_icon' => $icon,
-            'supports' => ['title', 'editor', 'custom-fields'],
+            'supports' => $supports,
         ]);
     }
 
@@ -159,6 +165,16 @@ final class Trappie_Weerstations_Post_Types
             'sanitize_callback' => [self::class, 'sanitize_gallery_ids'],
             'auth_callback' => [self::class, 'can_edit_meta'],
         ]);
+
+        register_post_meta(self::STATION_POST_TYPE, self::FEATURED_META_KEY, [
+            'single' => true,
+            'type' => 'string',
+            'show_in_rest' => true,
+            'sanitize_callback' => static function ($value): string {
+                return $value === '1' || $value === 1 || $value === true ? '1' : '0';
+            },
+            'auth_callback' => [self::class, 'can_edit_meta'],
+        ]);
     }
 
     public static function sanitize_gallery_ids($value): array
@@ -195,6 +211,13 @@ final class Trappie_Weerstations_Post_Types
     public static function render_station_meta_box(WP_Post $post): void
     {
         wp_nonce_field('trappie_save_station_meta', 'trappie_station_meta_nonce');
+        $featured = get_post_meta($post->ID, self::FEATURED_META_KEY, true);
+        echo '<p class="trappie-featured-setting">';
+        printf(
+            '<label><input type="checkbox" name="trappie_station_featured" value="1" %s> <strong>Uitgelicht weerstation</strong></label>',
+            checked($featured, '1', false)
+        );
+        echo '<br><span class="description">Toon dit model in de uitgelichte selectie op de website.</span></p>';
         self::render_fields($post, self::STATION_FIELDS);
     }
 
@@ -243,6 +266,7 @@ final class Trappie_Weerstations_Post_Types
         }
 
         self::save_meta_array($post_id, self::STATION_FIELDS);
+        update_post_meta($post_id, self::FEATURED_META_KEY, isset($_POST['trappie_station_featured']) ? '1' : '0');
     }
 
     public static function save_candidate_meta(int $post_id): void

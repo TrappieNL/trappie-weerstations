@@ -2,7 +2,7 @@
 
 ## 1. Doel van de plugin
 
-Trappie Weerstations is bedoeld voor een informatieve hobby- en advieswebsite over weerstations. De plugin beheert weerstations, technische specificaties, kandidaten uit externe bronnen en bezoekersvoorstellen.
+Trappie Weerstations is bedoeld voor een informatieve hobby- en advieswebsite over weerstations. De plugin beheert weerstations, technische specificaties en kandidaten uit externe crawlerbronnen.
 
 De plugin is geen webshop. Er zijn geen winkelwagen-, checkout-, voorraad- of betaalfuncties. De plugin voert zelf geen scraping uit.
 
@@ -28,6 +28,8 @@ De interne crawleronderdelen zijn niet publiek zichtbaar op de website.
 6. Voeg eventueel extra foto's toe onder **Weerstation afbeeldingen**.
 7. Selecteer toepasselijke taxonomieen.
 8. Kies **Publiceren**.
+
+Vink **Uitgelicht weerstation** aan om het model in de selectie op de start- en overzichtspagina te tonen.
 
 Gebruik bij twijfel een concept en controleer fabrikant- en broninformatie voordat je publiceert.
 
@@ -115,16 +117,17 @@ De plugin ondersteunt:
 
 ```text
 [weerstations_overzicht]
+[weerstations_uitgelicht aantal="4"]
 [weerstations_filter]
 [weerstations_vergelijking]
-[weerstation_voorstellen]
+[trappie_contactformulier]
 ```
 
-De openbare archiefpagina is standaard bereikbaar via `/weerstations/`. Filter-, vergelijk- en voorstelfuncties worden tijdens installatie als pagina aangemaakt.
+De openbare archiefpagina is standaard bereikbaar via `/weerstations/`. Daar kunnen bezoekers op merk filteren en maximaal vier stations aanvinken om te vergelijken. De vergelijk- en contactpagina worden tijdens installatie aangemaakt.
 
-## 10. Bezoekersvoorstellen
+## 10. Contact
 
-Een bezoeker kan via `[weerstation_voorstellen]` een model voorstellen. Dit wordt altijd als interne kandidaat opgeslagen en nooit automatisch gepubliceerd. Controleer het voorstel via **Gevonden kandidaten**.
+Bezoekers kunnen geen weerstation meer voorstellen. Voor algemene vragen gebruiken zij de contactpagina met `[trappie_contactformulier]`. Het formulier mailt naar het WordPress-beheeradres en maakt geen kandidaat of ander bericht aan.
 
 ## 11. Externe crawler en REST API
 

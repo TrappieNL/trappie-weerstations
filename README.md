@@ -8,8 +8,8 @@ WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations
 2. Ga in WordPress naar **Plugins > Nieuwe plugin > Plugin uploaden**.
 3. Upload de zip en activeer de plugin.
 4. Ga naar **Weerstations** om weerstations te beheren.
-5. Gebruik **Weerstations > Gevonden kandidaten** om crawler- of bezoekersvoorstellen te controleren.
-6. Open `/weerstations/` voor het publieke overzicht. De pagina's voor filteren, vergelijken en voorstellen worden automatisch aangemaakt.
+5. Gebruik **Weerstations > Gevonden kandidaten** om crawlerkandidaten te controleren.
+6. Open `/weerstations/` voor uitgelichte stations, het merkfilter en het volledige overzicht. De vergelijk- en contactpagina worden automatisch aangemaakt.
 7. Open **Weerstations > Handleiding** voor de gebruikershandleiding in WordPress, of lees `GEBRUIKERSHANDLEIDING.md`.
 
 ## Inhoud
@@ -36,9 +36,10 @@ WordPress-plugin voor een informatieve hobby- en advieswebsite over weerstations
 
 ```text
 [weerstations_overzicht]
+[weerstations_uitgelicht aantal="4"]
 [weerstations_filter]
 [weerstations_vergelijking]
-[weerstation_voorstellen]
+[trappie_contactformulier]
 ```
 
 Voor vergelijking kun je optioneel IDs meegeven:
@@ -146,7 +147,7 @@ curl -u "gebruikersnaam:application-password" \
 - REST endpoints gebruiken permission callbacks.
 - Invoer wordt gesanitized voordat deze wordt opgeslagen.
 - Output wordt escaped in admin en frontend.
-- Bezoekersvoorstellen worden altijd opgeslagen als interne kandidaat en niet direct gepubliceerd.
+- Het openbare contactformulier verstuurt alleen e-mail naar het WordPress-beheeradres en maakt geen kandidaten aan.
 
 ## Belangrijk
 

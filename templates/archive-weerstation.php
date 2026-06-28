@@ -8,9 +8,8 @@ if (!defined('ABSPATH')) {
 }
 
 $page_ids = get_option('trappie_weerstations_page_ids', []);
-$filter_url = !empty($page_ids['weerstations-filteren']) ? get_permalink((int) $page_ids['weerstations-filteren']) : '';
 $compare_url = !empty($page_ids['weerstations-vergelijken']) ? get_permalink((int) $page_ids['weerstations-vergelijken']) : '';
-$suggest_url = !empty($page_ids['weerstation-voorstellen']) ? get_permalink((int) $page_ids['weerstation-voorstellen']) : '';
+$contact_url = !empty($page_ids['contact']) ? get_permalink((int) $page_ids['contact']) : home_url('/contact/');
 
 get_header();
 ?>
@@ -18,21 +17,18 @@ get_header();
     <header class="trappie-archive-header">
         <p class="trappie-kicker">Trappie Weerstations</p>
         <h1>Weerstations</h1>
-        <p>Ontdek en vergelijk weerstations voor thuis en hobbygebruik.</p>
+        <p>Ontdek betrouwbare meetapparatuur voor tuin, dak en thuisnetwerk. Vergelijk sensoren, verbindingen en weerplatformen naast elkaar.</p>
         <nav class="trappie-archive-actions" aria-label="Weerstation hulpmiddelen">
-            <?php if ($filter_url) : ?>
-                <a href="<?php echo esc_url($filter_url); ?>">Filteren</a>
-            <?php endif; ?>
+            <a href="#alle-weerstations">Filter op merk</a>
             <?php if ($compare_url) : ?>
                 <a href="<?php echo esc_url($compare_url); ?>">Vergelijken</a>
             <?php endif; ?>
-            <?php if ($suggest_url) : ?>
-                <a href="<?php echo esc_url($suggest_url); ?>">Weerstation voorstellen</a>
-            <?php endif; ?>
+            <a href="<?php echo esc_url($contact_url); ?>">Contact</a>
         </nav>
     </header>
 
-    <?php echo do_shortcode('[weerstations_overzicht aantal="24"]'); ?>
+    <?php echo do_shortcode('[weerstations_uitgelicht aantal="4"]'); ?>
+    <?php echo do_shortcode('[weerstations_filter]'); ?>
 </main>
 <?php
 get_footer();

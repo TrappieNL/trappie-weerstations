@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Trappie Weerstations
  * Description: Informatieve hobby- en advieswebsite over weerstations. Geen webshop.
- * Version: 1.4.0
+ * Version: 1.6.0
  * Author: Trappie
  * Text Domain: trappie-weerstations
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('TRAPPIE_WEERSTATIONS_VERSION', '1.4.0');
+define('TRAPPIE_WEERSTATIONS_VERSION', '1.6.0');
 define('TRAPPIE_WEERSTATIONS_FILE', __FILE__);
 define('TRAPPIE_WEERSTATIONS_DIR', plugin_dir_path(__FILE__));
 define('TRAPPIE_WEERSTATIONS_URL', plugin_dir_url(__FILE__));
@@ -62,9 +62,9 @@ final class Trappie_Weerstations_Plugin
                 'title' => 'Weerstations vergelijken',
                 'content' => '[weerstations_vergelijking]',
             ],
-            'weerstation-voorstellen' => [
-                'title' => 'Weerstation voorstellen',
-                'content' => '[weerstation_voorstellen]',
+            'contact' => [
+                'title' => 'Contact',
+                'content' => '[trappie_contactformulier]',
             ],
         ];
 
@@ -87,6 +87,18 @@ final class Trappie_Weerstations_Plugin
             if (!is_wp_error($page_id) && $page_id) {
                 $page_ids[$slug] = (int) $page_id;
             }
+        }
+
+        $proposal_page = get_page_by_path('weerstation-voorstellen', OBJECT, 'page');
+        if (
+            $proposal_page instanceof WP_Post &&
+            $proposal_page->post_status === 'publish' &&
+            has_shortcode($proposal_page->post_content, 'weerstation_voorstellen')
+        ) {
+            wp_update_post([
+                'ID' => $proposal_page->ID,
+                'post_status' => 'draft',
+            ]);
         }
 
         update_option('trappie_weerstations_page_ids', $page_ids);
